@@ -1,0 +1,15 @@
+mongodb:
+  secondary:
+    host: localhost
+    port: 27017
+    username: test1
+    password: test1
+    database: test1
+    authenticationDatabase: test1
+  primary:
+    host: localhost
+    port: 27017
+    username: test
+    password: test
+    database: test
+    authenticationDatabase: test
