@@ -1,6 +1,6 @@
-####1.@Scheduled 参数可以接受两种定时的设置，一种是我们常用的cron="*/6 * * * * ?",一种是 fixedRate = 6000，两种都表示每隔六秒打印一下内容。
+1.@Scheduled 参数可以接受两种定时的设置，一种是我们常用的cron="*/6 * * * * ?",一种是 fixedRate = 6000，两种都表示每隔六秒打印一下内容。
 
-####2.fixedRate 说明
+2.fixedRate 说明
 
 ```
 @Scheduled(fixedRate = 6000) ：上一次开始执行时间点之后6秒再执行
