@@ -4,10 +4,7 @@ import com.example.demo.entity.SysPermission;
 import com.example.demo.entity.SysRole;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.UserInfoService;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -31,9 +28,11 @@ public class MyShiroRealm extends AuthorizingRealm {
 
         System.out.println("开始身份验证");
         String username = (String) token.getPrincipal();
+
         UserInfo userInfo = userInfoService.findByUsername(username);
 
         if (userInfo == null) {
+            //没有返回登录用户名对应的SimpleAuthenticationInfo对象时,就会在LoginController中抛出UnknownAccountException异常
             return null;
         }
 

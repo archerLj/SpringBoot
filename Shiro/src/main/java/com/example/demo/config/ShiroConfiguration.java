@@ -28,6 +28,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/logout", "logout");
         filterChainDefinitionMap.put("/index", "user");
         filterChainDefinitionMap.put("/", "user");
+        filterChainDefinitionMap.put("/favicon.ico", "anon");
         filterChainDefinitionMap.put("/**", "authc");
 
         shiroFilterFactoryBean.setLoginUrl("/login");
