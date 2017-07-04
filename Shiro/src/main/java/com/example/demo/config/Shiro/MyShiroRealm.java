@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.Shiro;
 
 import com.example.demo.entity.SysPermission;
 import com.example.demo.entity.SysRole;

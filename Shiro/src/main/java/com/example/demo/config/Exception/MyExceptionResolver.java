@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.Exception;
 
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
