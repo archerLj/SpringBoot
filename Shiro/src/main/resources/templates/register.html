@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/register}" method="post">
+    <h3 th:text="${{msg}}"></h3>
+    <p>用户名: <input type="text", name="username"></p>
+    <p>密码: <input type="password", name="password"></p>
+    <p>密码确认: <input type="password", name="passwordAgain"></p>
+
+    权限控制:
+    <div th:each="item : ${roles}">
+        <input type="checkbox" name="checkbox" th:value="${{item}}" th:text="${{item}}">
+    </div>
+    <p><input type="submit" value="注册"></p>
+</form>
+</body>
+</html>

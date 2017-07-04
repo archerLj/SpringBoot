@@ -36,8 +36,9 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/index", "user");
         filterChainDefinitionMap.put("/", "user");
         filterChainDefinitionMap.put("/favicon.ico", "anon");
-        filterChainDefinitionMap.put("/login", "kaptchaFilter");
         filterChainDefinitionMap.put("/kaptcha.jpg", "anon");//图片验证码(kaptcha框架)
+        filterChainDefinitionMap.put("/register", "anon");
+        filterChainDefinitionMap.put("/login", "kaptchaFilter");
         filterChainDefinitionMap.put("/**", "authc");
 
 

@@ -8,7 +8,7 @@
 错误信息：<h4 style="color: red;" th:text="${msg}"></h4>
 <form th:action="@{/login}" method="post">
     <p>账号：<input type="text" name="username" value="admin"/></p>
-    <p>密码：<input type="text" name="password" value="123456"/></p>
+    <p>密码：<input type="password" name="password" value="123456"/></p>
     <div><label> 验证码 : <input type="text" name="captcha" placeholder="验证码"/> </label></div>
     <div><img style="width: 10%; display: inline;" th:src="@{/kaptcha.jpg}" title="点击切换" id="kaptcha-img"/></div>
     <!--<div><a onclick="refreshCaptcha()">看不清?换一个试试</a></div>-->

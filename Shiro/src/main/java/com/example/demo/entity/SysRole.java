@@ -64,9 +64,9 @@ public class SysRole implements Serializable {
     public void setPermissions(List<SysPermission> permissions) {
         this.permissions = permissions;
     }
-    @Override
-    public String toString() {
-        return "SysRole [id=" + id + ", role=" + role + ", description=" + description + ", available=" + available
-                + ", permissions=" + permissions + "]";
-    }
+//    @Override
+//    public String toString() {
+//        return "SysRole [id=" + id + ", role=" + role + ", description=" + description + ", available=" + available
+//                + ", permissions=" + permissions + "]";
+//    }
 }
