@@ -28,7 +28,7 @@ public class HomeController {
 
         // 登录失败从request中获取shiro处理的异常信息。
         // shiroLoginFailure:就是shiro异常类的全类名.
-        Exception exception = (Exception) request.getAttribute("shiroLoginFailure");
+        Object exception = request.getAttribute("shiroLoginFailure");
 //        String exception = (String) request.getAttribute("shiroLoginFailure");
         String msg = "";
         if (exception != null) {
