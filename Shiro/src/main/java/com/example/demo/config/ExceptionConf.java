@@ -9,7 +9,9 @@ import java.util.Properties;
 /**
  * Created by archerlj on 2017/6/30.
  */
-@Configuration
+
+//使用统一异常处理类MyExceptionResolver来处理403异常。该配置也可以处理。
+//@Configuration
 public class ExceptionConf {
 
     @Bean
