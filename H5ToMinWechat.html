@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>打开小程序</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.4.1/weui.min.css">
+  </link>
+  <script typet="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="https://cdn.bootcss.com/babel-polyfill/7.6.0/polyfill.js"></script>
+  <!-- 调试用的移动端 console -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script> -->
+  <!-- <script>eruda.init();</script> -->
+  <!-- 公众号 JSSDK -->
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+
+<body>
+  <div class="page full">
+    <div id="public-web-container" class="hidden">
+      <p class="">正在打开 ...</p> <!-- replace -->
+      <a id="public-web-jump-button" href="javascript:" class="weui-btn weui-btn_primary weui-btn_loading"
+        onclick="openWeapp()">
+        <span id="public-web-jump-button-loading" class="weui-primary-loading weui-primary-loading_transparent"><i
+            class="weui-primary-loading__dot"></i></span>
+        打开小程序
+      </a>
+    </div>
+    <!-- 跳转小程序的开放标签。文档 https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_Open_Tag.html -->
+
+    <div id="wechat-web-container" class="hidden">
+      
+    </div>
+    <div id="desktop-web-container" class="hidden">
+      <p class="">请在手机打开网页链接</p>
+    </div>
+  </div>
+</body>
+<script>
+  window.onerror = e => {
+    console.error(e)
+    alert('发生错误' + e)
+  }
+</script>
+<script>
+  function getQueryVariable() {
+    let href = window.location.href
+    let query = href.substring(href.indexOf('?') + 1);
+    let vars = query.split("&");
+    let obj = {}
+    for (var i = 0; i < vars.length; i++) {
+      let pair = vars[i].split("=");
+      obj[pair[0]] = pair[1]
+    }
+    return obj;
+  }
+  var querys = getQueryVariable();
+  var path = querys.path ? decodeURIComponent(querys.path) : '/pages/followerDetail/followerDetail'    //  replace  需要跳转的路径
+  var username = ''// replace username小程序原始id
+  //  replace username
+  $('#wechat-web-container').append(`
+    <wx-open-launch-weapp
+          id="launch-btn"
+          username="${username}" 
+          path="${path}"
+    >
+    <template>
+      <button style="width: 200px; height: 45px; text-align: center; font-size: 17px; display: block; margin: 0 auto; padding: 8px 24px; border: none; border-radius: 4px; background-color: #07c160; color:#fff;">打开小程序</button> 
+    </template>
+  </wx-open-launch-weapp>`)
+  console.log('querys', querys)
+</script>
+<!-- weui 样式 -->
+
+<!-- 云开发 Web SDK -->
+<!-- <script src="https://res.wx.qq.com/open/js/cloudbase/1.1.0/cloud.js"></script> -->
+<script>
+  document.addEventListener('WeixinOpenTagsError', function (e) {
+
+    console.error('e.detail.errMsg', e.detail.errMsg); // 无法使用开放标签的错误原因，需回退兼容。仅无法使用开发标签，JS-SDK其他功能不受影响
+  });
+  // console.log($)
+  function docReady(fn) {
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      fn()
+    } else {
+      document.addEventListener('DOMContentLoaded', fn);
+    }
+  }
+  docReady(async function () {
+
+    var ua = navigator.userAgent.toLowerCase()
+    var isWXWork = ua.match(/wxwork/i) == 'wxwork'
+    var isWeixin = !isWXWork && ua.match(/micromessenger/i) == 'micromessenger'
+    var isMobile = false
+    var isDesktop = false
+    if (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|IEMobile)/i)) {
+      isMobile = true
+    } else {
+      isDesktop = true
+    }
+
+    if (isWeixin) {
+      var containerEl = document.getElementById('wechat-web-container')
+      containerEl.classList.remove('hidden')
+      containerEl.classList.add('full', 'wechat-web-container')
+
+      var launchBtn = document.getElementById('launch-btn')
+      launchBtn.addEventListener('ready', function (e) {
+        console.log('开放标签 ready')
+      })
+      launchBtn.addEventListener('launch', function (e) {
+        console.log('开放标签 success')
+      })
+      launchBtn.addEventListener('error', function (e) {
+        console.log('开放标签 fail', e.detail)
+      })
+
+      $.get('', {url: location.href.split('#')[0]}, function (res) { //  replace  获取后端签名授权接口
+        wx.config({
+          debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+          appId: res.data.appId, // 必填，企业号的唯一标识，此处填写企业号corpid
+          timestamp: res.data.timestamp, // 必填，生成签名的时间戳
+          nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
+          signature: res.data.signature,// 必填，签名，见附录1
+          jsApiList: ['chooseImage'], // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+          openTagList: ['wx-open-launch-weapp', 'wx-open-launch-app'],
+        });
+        wx.ready(function () {
+        });
+        wx.error(function (res) {
+          console.log('失败', res)
+          // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+          //                alert(JSON.stringify(res))
+        })
+      })
+
+    } else if (isDesktop) {
+      // 在 pc 上则给提示引导到手机端打开
+      var containerEl = document.getElementById('desktop-web-container')
+      containerEl.classList.remove('hidden')
+      containerEl.classList.add('full', 'desktop-web-container')
+    } else {
+      var containerEl = document.getElementById('public-web-container')
+      containerEl.classList.remove('hidden')
+      containerEl.classList.add('full', 'public-web-container')
+
+
+      var buttonEl = document.getElementById('public-web-jump-button')
+      var buttonLoadingEl = document.getElementById('public-web-jump-button-loading')
+      try {
+        await openWeapp(() => {
+          buttonEl.classList.remove('weui-btn_loading')
+          buttonLoadingEl.classList.add('hidden')
+        })
+      } catch (e) {
+        buttonEl.classList.remove('weui-btn_loading')
+        buttonLoadingEl.classList.add('hidden')
+        throw e
+      }
+    }
+  })
+
+  async function openWeapp(onBeforeJump) {
+    if (onBeforeJump) {
+      onBeforeJump()
+    }
+    location.href = 'weixin://dl/business/?t=ycFo70xgaLk' //  replace  生成小程序URL Scheme 用于h5跳转
+  }
+</script>
+<style>
+  .hidden {
+    display: none;
+  }
+
+  .full {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .public-web-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .public-web-container p {
+    position: absolute;
+    top: 40%;
+  }
+
+  .public-web-container a {
+    position: absolute;
+    bottom: 40%;
+  }
+
+  .wechat-web-container {
+    width: 100vw;
+    height: 100vh;
+    /* background-image: url('https://pic.ptdot.cn/tmp_796bfd882696968bc7a90518986b95db.jpg'); */
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .wechat-web-container .bannerContent {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, #222222 100%);
+  }
+
+  .wechat-web-container p {
+    position: absolute;
+    top: 40%;
+  }
+
+  .wechat-web-container wx-open-launch-weapp {
+    position: absolute;
+    bottom: 40%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .wechat-web-container .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+  }
+
+  .content .title {
+    font-weight: bold;
+    position: relative;
+    font-size: 40px;
+    color: #fff;
+    margin-top: 100px
+  }
+
+  .desktop-web-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .desktop-web-container p {
+    position: absolute;
+    top: 40%;
+  }
+</style>
+</head>
+
+
+</html>
